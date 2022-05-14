@@ -2,6 +2,8 @@ from flask import redirect, render_template, url_for, flash, request, session, c
 
 from loja import db, app
 from loja.produtos.models import Addproduto
+from loja.produtos.rotas import marcas, categorias
+import json
 
 
 
@@ -29,9 +31,12 @@ def AddCart():
             DicItems = {produto_id:{'name':produto.name, 'price':float(produto.price), 'discount':produto.discount, 'color':colors, 'quantidade':quantity, 'img':produto.image_1, 'colors':produto.colors}}
             if 'LojainCarrinho' in session:
                 print(session["LojainCarrinho"])
-
                 if produto_id in session['LojainCarrinho']:
-                    print('Este produto ja existe no carrinho')
+                    if produto_id in session['LojainCarrinho']:
+                        for key, item in session['LojainCarrinho'].items():
+                            if int(key) == int(produto_id):
+                                session.modified = True
+                                item['quantidade'] += 1
                 else:
                     session['LojainCarrinho'] = M_Dicionarios(session['LojainCarrinho'], DicItems)
                     return redirect(request.referrer)
@@ -57,7 +62,7 @@ def getCart():
         subtotal -= discount
         imposto = ("%.2f" % (.06 * float(subtotal)))
         valorpagar = float('%.2f' % (1.06 * subtotal))
-    return render_template('produtos/carros.html', imposto=imposto, valorpagar=valorpagar)
+    return render_template('produtos/carros.html', imposto=imposto, valorpagar=valorpagar,marcas=marcas(), categorias=categorias())
 
 @app.route('/updateCarro/<int:code>', methods=['POST'])
 def updateCarro(code):
@@ -95,6 +100,18 @@ def deleteitem(id):
     except Exception as e:
         print(e)
         return redirect(url_for('getCart'))
+
+
+@app.route('/limparcarro/')
+def limparcarro():
+    try:
+        session.pop('LojainCarrinho',None)
+        return redirect(url_for('home'))
+    except Exception as e:
+        print(e)
+
+
+
 
 
 @app.route('/vazio')
