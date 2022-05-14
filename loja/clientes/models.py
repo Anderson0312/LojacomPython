@@ -14,7 +14,7 @@ class Cadastrar(db.Model):
     address = db.Column(db.String(50), unique = False)
     zipcode = db.Column(db.String(50), unique=False)
     profile = db.Column(db.String(50), unique = False, default='profile.jpg')
-    data_criado = db.Column(db.Datetime, nullable = False, default='datetime.utcnow')
+    data_criado = db.Column(db.DateTime, nullable = False, default=datetime.utcnow)
     def __repr__(self):
         return '<Cadastrar %r>' % self.name
 
