@@ -6,10 +6,11 @@
 
     {% include '_messages.html' %}
 
-    <div class="text-center h1 text-success"> Registrar </div>
+    <div class="text-center h1 text-success"> Registrar Usuarios</div>
 
     {% from "_formularioajuda.html" import render_field %}
     <form method="post" enctype="multipart/form-data">
+        {{form.csrf_token}}
         <div>
             {{render_field(form.name, class="form-control")}}
             {{render_field(form.username, class="form-control")}}
