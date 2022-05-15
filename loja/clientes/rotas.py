@@ -23,15 +23,17 @@ def cadastrar_clientes():
 
 @app.route("/cliente/login", methods=['GET', 'POST'])
 def clienteLogin():
-    form = ClienteloginForm()
-    if form.validate_on_submit():
+    form = ClienteloginForm(request.form)
+    if request.method == "POST" and form.validate():
         user = Cadastrar.query.filter_by(email=form.email.data).first()
+        print(user)
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
+            login_user(user) 
             flash(f'Você está logado','success')
             next = request.args.get('next')
             return redirect(next or url_for('home'))
         flash('Senha ou email incorretas','danger')
-        return redirect(url_for('clienteLogin'))    
+        return redirect(url_for('clienteLogin'))  
+ 
     return render_template('cliente/login.html', form=form)
 
