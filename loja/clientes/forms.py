@@ -32,6 +32,8 @@ class CadastroClienteForm(FlaskForm):
             raise ValidationError('Este usuario já existe!')
 
 
-class ClienteloginForm(FlaskForm):
+# """CLASS para VALIDAR O LOGIN DE CLIENTE da loja"""
+
+class ClienteloginForm(Form):
     email = StringField('Email: ',[validators.DataRequired()])
     password = PasswordField('Senha: ',[validators.DataRequired()])
